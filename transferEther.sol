@@ -2,7 +2,7 @@
 
 pragma solidity 0.6.11;
 
-contract TransferEther {
+contract transferEther {
     
     function transfer(address payable _recipient) payable external {
         _recipient.transfer(msg.value);
