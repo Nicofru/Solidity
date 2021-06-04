@@ -116,7 +116,7 @@ contract Voting is Ownable {
         emit VoterRegistered(_address);
     }
 
-    function removeFromWhitelist(address _address) external onlyOwner onlyWhitelisted(_address) onlyOwner {
+    function removeFromWhitelist(address _address) external onlyOwner onlyWhitelisted(_address) {
         whitelist[_address].isRegistered = false;
         emit VoterUnregistered(_address);
     }
