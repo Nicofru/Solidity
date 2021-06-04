@@ -47,8 +47,12 @@ contract Voting is Ownable {
         _;
     }
 
-    function tallyVotes() external onlyOwner {
-        require(currentWorkflow >= WorkflowStatus.VotingSessionEnded, "Voting session has not ended");
+    modifier workflowOrder(WorkflowStatus expectedWorkflow) {
+        require(currentWorkflow == expectedWorkflow, "Worflow order not respected");
+        _;
+    }
+
+    function tallyVotes() external onlyOwner workflowOrder(WorkflowStatus.VotingSessionEnded) {
         bool even;
         uint count;
         uint winner;
@@ -68,13 +72,12 @@ contract Voting is Ownable {
         emit VotesTallied();
     }
 
-    function endVotingSession() external onlyOwner {
+    function endVotingSession() external onlyOwner workflowOrder(WorkflowStatus.VotingSessionStarted) {
         changeWorkflowStatus(WorkflowStatus.VotingSessionEnded);
         emit VotingSessionEnded();
     }
 
-    function registerVote(uint proposalId) external onlyWhitelisted(msg.sender) {
-        require(currentWorkflow == WorkflowStatus.VotingSessionStarted, "Voting session is not open");
+    function registerVote(uint proposalId) external onlyWhitelisted(msg.sender) workflowOrder(WorkflowStatus.VotingSessionStarted) {
         require(whitelist[msg.sender].hasVoted == false, "Address has already voted");
         whitelist[msg.sender].hasVoted = true;
         whitelist[msg.sender].votedProposalId = proposalId;
@@ -82,23 +85,22 @@ contract Voting is Ownable {
         emit Voted(msg.sender, proposalId);
     }
 
-    function startVotingSession() external onlyOwner {
+    function startVotingSession() external onlyOwner workflowOrder(WorkflowStatus.ProposalsRegistrationEnded) {
         changeWorkflowStatus(WorkflowStatus.VotingSessionStarted);
         emit VotingSessionStarted();
     }
 
-    function endProposalsRegistration() external onlyOwner {
+    function endProposalsRegistration() external onlyOwner workflowOrder(WorkflowStatus.ProposalsRegistrationStarted) {
         changeWorkflowStatus(WorkflowStatus.ProposalsRegistrationEnded);
         emit ProposalsRegistrationEnded();
     }
 
-    function registerProposal(string calldata description) external onlyWhitelisted(msg.sender) {
-        require(currentWorkflow == WorkflowStatus.ProposalsRegistrationStarted, "Proposals registration is not open");
+    function registerProposal(string calldata description) external onlyWhitelisted(msg.sender) workflowOrder(WorkflowStatus.ProposalsRegistrationStarted) {
         proposals.push(Proposal(description, 0));
         emit ProposalRegistered(proposals.length - 1);
     }
 
-    function startProposalsRegistration() external onlyOwner {
+    function startProposalsRegistration() external onlyOwner workflowOrder(WorkflowStatus.RegisteringVoters) {
         changeWorkflowStatus(WorkflowStatus.ProposalsRegistrationStarted);
         emit ProposalsRegistrationStarted();
     }
