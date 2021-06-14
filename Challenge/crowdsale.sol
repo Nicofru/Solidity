@@ -3,7 +3,7 @@
 * Use latest version of solidity, preferably fix version number to avoir bugs, without the "^"
 */
 
-// SPDX-License-Identifier: GPL-3.0
+// SPDX-License-Identifier : UNLICENSED
 pragma solidity 0.8.4;
 
 contract Crowdsale {
