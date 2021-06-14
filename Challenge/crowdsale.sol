@@ -41,6 +41,7 @@ contract Crowdsale {
  
     function withdrawPayments() external {
         require(balances[msg.sender] > 0, "No funds to withdraw");
+        require(address(this).balance >= balances[msg.sender], "Not enough funds available");
 
         // no need to instantiate a variable for msg.sender
         uint256 payment = balances[msg.sender];
