@@ -340,7 +340,45 @@ class App extends Component {
               return (
                 <div>
                   <h2>Votes Tallied</h2>
-                  <p>Winner: {proposals[winningProposalId].description}</p>
+                  <div style={{display: 'flex', justifyContent: 'center'}}>
+                    <Card style={{ width: '50rem' }}>
+                      <Card.Header><strong>Winner</strong></Card.Header>
+                      <Card.Body>
+                        <h3>{proposals[winningProposalId].description}</h3>
+                      </Card.Body>
+                    </Card>
+                  </div>
+                  <br></br>
+                  <div style={{display: 'flex', justifyContent: 'center'}}>
+                    <Card style={{ width: '50rem' }}>
+                      <Card.Header><strong>Results</strong></Card.Header>
+                      <Card.Body>
+                        <ListGroup variant="flush">
+                          <ListGroup.Item>
+                            <Table striped bordered hover>
+                              <thead>
+                                <tr>
+                                  <th>index</th>
+                                  <th>proposal</th>
+                                  <th>votes</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                { proposals !== null && proposals.map((key, index) =>
+                                    <tr>
+                                      <td>{index}</td>
+                                      <td>{key.description}</td>
+                                      <td>{key.voteCount}</td>
+                                    </tr>
+                                  )
+                                }
+                              </tbody>
+                            </Table>
+                          </ListGroup.Item>
+                        </ListGroup>
+                      </Card.Body>
+                    </Card>
+                  </div>
                 </div>
               )
             default :
